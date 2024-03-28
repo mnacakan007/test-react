@@ -1,8 +1,20 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import * as Sentry from "@sentry/react";
+
+class ValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = `Error: "${message}`
+  }
+}
 
 function App() {
+  function handleClick(message: any) {
+    throw new ValidationError(message);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,9 +30,10 @@ function App() {
         >
           Learn React
         </a>
+        <button onClick={() => handleClick('som error ')}>Error</button>
       </header>
     </div>
   );
 }
 
-export default App;
+export default Sentry.withProfiler(App);
